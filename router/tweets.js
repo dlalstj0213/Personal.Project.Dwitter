@@ -77,10 +77,10 @@ router
 	.delete('/:id', (req, res, next) => {
 		const id = req.params.id;
 
-		tweetsList.map((item) => {
-			return item.id === id ? false : true;
-		});
+		let temp = tweetsList.filter((item) => item.id !== id);
+		tweetsList = temp;
 
+		console.log(tweetsList.length);
 		res.status(204).send('Deleted!');
 	});
 

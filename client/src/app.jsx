@@ -1,26 +1,25 @@
 import { useHistory } from 'react-router-dom';
 import './app.css';
-import Header from './pages/Header';
+import Header from './components/Header';
+import { useAuth } from './context/AuthContext';
 
 function App({ tweetService }) {
 	const history = useHistory();
-	//const {user, logout} = useAuth();
+	const { user, logout } = useAuth();
 
 	const onAllTweets = () => {
 		history.push('/');
 	};
 
 	const onMyTweets = () => {
-		//history.push(`/${user.username}`);
+		history.push(`/${user.username}`);
 	};
 
 	const onLogout = () => {
-		/*
-		if(window.confirm('Do you want to log out?')) {
+		if (window.confirm('Do you want to log out?')) {
 			logout();
 			history.push('/');
 		}
-		*/
 	};
 
 	return (

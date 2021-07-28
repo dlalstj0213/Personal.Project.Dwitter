@@ -1,7 +1,8 @@
-import { useHistory } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import './app.css';
 import Header from './components/Header';
 import { useAuth } from './context/AuthContext';
+import AllTweets from './pages/AllTweets';
 
 function App({ tweetService }) {
 	const history = useHistory();
@@ -30,6 +31,18 @@ function App({ tweetService }) {
 				onAllTweets={onAllTweets}
 				onMyTweets={onMyTweets}
 			/>
+			<Switch>
+				(
+				<>
+					<Route exact path="/">
+						<AllTweets tweetService={tweetService} />
+					</Route>
+					<Route exact path="/:username">
+						{/* MyTweets */}
+					</Route>
+				</>
+				)
+			</Switch>
 		</div>
 	);
 }

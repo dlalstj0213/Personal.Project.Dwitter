@@ -5,7 +5,8 @@ export default class TweetService {
 			text: '트윗 초기 텍스트 입력하기!!!',
 			name: 'Bob',
 			username: 'bob',
-			url: 'https://widgetwhats.com/app/uploads/2019/11/free-profile-photo-whatsapp-1.png',
+			img_url:
+				'https://widgetwhats.com/app/uploads/2019/11/free-profile-photo-whatsapp-1.png',
 		},
 	];
 

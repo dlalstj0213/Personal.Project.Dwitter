@@ -1,6 +1,6 @@
 import React, { memo, useState } from 'react';
 
-const EditTweetForm = memo((tweet, onUpdate, onClose) => {
+const EditTweetForm = memo(({ tweet, onUpdate, onClose }) => {
 	const [text, setText] = useState(tweet.text);
 
 	const onSubmit = async (event) => {

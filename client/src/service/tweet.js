@@ -21,7 +21,7 @@ export default class TweetService {
 			id: Date.now(),
 			createdAt: new Date(),
 			name: 'Minseo',
-			username: 'name',
+			username: 'minseo',
 			text,
 		};
 		this.tweets.push(tweet);
@@ -29,7 +29,7 @@ export default class TweetService {
 	}
 
 	async deleteTweet(tweetId) {
-		this.tweets = this.tweet.filter((tweet) => tweet.id !== tweetId);
+		this.tweets = this.tweets.filter((tweet) => tweet.id !== tweetId);
 	}
 
 	async updateTweet(tweetId, text) {

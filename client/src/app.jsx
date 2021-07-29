@@ -3,6 +3,7 @@ import './app.css';
 import Header from './components/Header';
 import { useAuth } from './context/AuthContext';
 import AllTweets from './pages/AllTweets';
+import MyTweets from './pages/MyTweets';
 
 function App({ tweetService }) {
 	const history = useHistory();
@@ -38,7 +39,7 @@ function App({ tweetService }) {
 						<AllTweets tweetService={tweetService} />
 					</Route>
 					<Route exact path="/:username">
-						{/* MyTweets */}
+						<MyTweets tweetService={tweetService} />
 					</Route>
 				</>
 				)

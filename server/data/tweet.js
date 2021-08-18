@@ -15,7 +15,7 @@ const tweets = [
 */
 let tweets = JSON.parse(
 	fs.readFileSync(
-		path.join(process.cwd(), 'res', 'json', 'sample-tweets.json'),
+		path.join(process.cwd(), 'res', 'json', 'sample-data.json'),
 		'utf8'
 	)
 ).tweets;

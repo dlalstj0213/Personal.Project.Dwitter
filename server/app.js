@@ -6,6 +6,7 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 
 import tweetsRouter from './routes/tweets.js';
+import authRouter from './routes/auth.js';
 
 const app = express();
 
@@ -21,6 +22,7 @@ const option = {
 app.use(cors(option));
 
 app.use('/tweets', tweetsRouter);
+app.use('/auth', authRouter);
 
 // Bad Request 처리
 app.use((req, res, next) => {

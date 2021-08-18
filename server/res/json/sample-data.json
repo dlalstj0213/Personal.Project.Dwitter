@@ -24,5 +24,15 @@
       "username": "john-coder",
       "img_url": "https://widgetwhats.com/app/uploads/2019/11/free-profile-photo-whatsapp-4-300x300.png"
     }
+  ],
+  "users" : [
+    {
+      "id": "1",
+      "username": "steve-coder",
+      "password": "$2b$10$p0QGo0SCPf04HkP17OxA.OsQH1COyfnhICqzqLTrcWJA1zwyDRhNG",
+      "name": "Steve",
+      "email": "steve@gmail.com",
+      "img_url": "https://widgetwhats.com/app/uploads/2019/11/free-profile-photo-whatsapp-4-300x300.png"
+    }
   ]
 }

@@ -1,10 +1,11 @@
-const test = {
-	text: 'test',
-};
-
-function foo() {
-	return test ? {test.text = 'hello';
-  return test;} : test;
+class Immutable {
+	constructor() {
+		this.name = 'hello';
+		this.type = 'typo';
+		Object.freeze(this);
+	}
 }
 
-console.log(test);
+let test = new Immutable();
+//test.name = 'NONE';
+console.log(test.name);

@@ -19,3 +19,7 @@ export async function createUser(user) {
 	users.push(created);
 	return created.id;
 }
+
+export async function findById(id) {
+	return users.find((user) => user.id == id);
+}

@@ -3,6 +3,7 @@ import 'express-async-errors';
 import { body, param } from 'express-validator';
 import TweetController from '../controller/TweetController.js';
 import { validate } from '../middleware/validator.js';
+import { isAuth } from '../middleware/auth.js';
 
 const tweetController = new TweetController();
 const router = express.Router();
@@ -22,12 +23,13 @@ const validateTweet = [
 ];
 
 router
-	.get('/', tweetController.getTweets)
-	.get('/:id', tweetController.getTweet)
-	.post('/', validateTweet, tweetController.createTweet)
-	.put('/:id', validateTweet, tweetController.updateTweet)
+	.get('/', isAuth, tweetController.getTweets)
+	.get('/:id', isAuth, tweetController.getTweet)
+	.post('/', isAuth, validateTweet, tweetController.createTweet)
+	.put('/:id', isAuth, validateTweet, tweetController.updateTweet)
 	.delete(
 		'/:id',
+		isAuth,
 		[param('id').notEmpty().withMessage('삭제할 아이디가 없습니다.'), validate],
 		tweetController.deleteTweet
 	);

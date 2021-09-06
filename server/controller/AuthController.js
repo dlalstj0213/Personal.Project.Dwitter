@@ -1,4 +1,3 @@
-import {} from 'express-async-errors';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import * as userRepository from '../data/auth.js';
@@ -13,8 +12,13 @@ const createJwtToken = function (id) {
 	});
 };
 
+/**
+ * [참고] HTTP 인증 프레임워크의 여러 인증 스킴
+ * https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication
+ */
+
 // TODO: 나중에 아래의 코드를 은닉해야한다. (to make secure)
-export default class TweetController {
+export default class AuthController {
 	async signup(req, res, next) {
 		const { username, password, name, email, img_url } = req.body;
 		const found = await userRepository.findByUsername(username);
@@ -47,5 +51,13 @@ export default class TweetController {
 		}
 		const token = createJwtToken(user.id);
 		res.status(200).json({ token, username });
+	}
+
+	async me(req, res, next) {
+		const user = await userRepository.findById(req.userId);
+		if (!user) {
+			return res.status(404).json({ message: 'User not found' });
+		}
+		res.status(200).json({ totken: req.token, username: user.username });
 	}
 }

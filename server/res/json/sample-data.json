@@ -4,25 +4,19 @@
       "id": "a1",
       "text": "Hello :) this is my first tweet !",
       "createdAt": "",
-      "name": "Steve",
-      "username": "steve-coder",
-      "img_url": "https://cdn.expcloud.co/life/uploads/2020/04/27135731/Fee-gentry-hed-shot-1.jpg"
+      "userId": "1"
     },
     {
       "id": "a2",
       "text": "Hello :) this is my seconde tweet !",
       "createdAt": "",
-      "name": "Steve",
-      "username": "steve-coder",
-      "img_url": "https://widgetwhats.com/app/uploads/2019/11/free-profile-photo-whatsapp-1.png"
+      "userId": "1"
     },
     {
       "id": "a3",
       "text": "Hi~ :) this is my first tweet !",
       "createdAt": "",
-      "name": "John",
-      "username": "john-coder",
-      "img_url": "https://widgetwhats.com/app/uploads/2019/11/free-profile-photo-whatsapp-4-300x300.png"
+      "userId": "2"
     }
   ],
   "users" : [
@@ -32,6 +26,14 @@
       "password": "$2b$10$p0QGo0SCPf04HkP17OxA.OsQH1COyfnhICqzqLTrcWJA1zwyDRhNG",
       "name": "Steve",
       "email": "steve@gmail.com",
+      "img_url": "https://cdn.expcloud.co/life/uploads/2020/04/27135731/Fee-gentry-hed-shot-1.jpg"
+    },
+    {
+      "id": "2",
+      "username": "john-coder",
+      "password": "$2b$10$p0QGo0SCPf04HkP17OxA.OsQH1COyfnhICqzqLTrcWJA1zwyDRhNG",
+      "name": "John",
+      "email": "john@gmail.com",
       "img_url": "https://widgetwhats.com/app/uploads/2019/11/free-profile-photo-whatsapp-4-300x300.png"
     }
   ]

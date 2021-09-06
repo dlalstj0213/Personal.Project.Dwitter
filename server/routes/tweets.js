@@ -17,8 +17,6 @@ const validateTweet = [
 		.withMessage('트윗 내용이 없습니다.')
 		.isLength({ min: 2 })
 		.withMessage('트윗 내용은 3글자 이상 입력해야합니다.'),
-	body('name').trim().notEmpty().withMessage('이름은 필수입니다.'),
-	body('username').trim().notEmpty().withMessage('유저이름은 필수입니다.'),
 	validate,
 ];
 

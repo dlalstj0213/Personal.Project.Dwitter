@@ -18,9 +18,9 @@ export default class TweetController {
 	}
 
 	async createTweet(req, res, next) {
-		const { text, name, username } = req.body;
-		const tweet = await tweetRepository.create(text, name, username);
-		console.log(tweet);
+		const { text } = req.body;
+		const userId = req.userId;
+		const tweet = await tweetRepository.create(text, userId);
 		res.status(201).json(tweet);
 	}
 

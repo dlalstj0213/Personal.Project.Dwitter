@@ -1,23 +1,19 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import * as userRepository from '../data/auth.js';
-
-const jwtSecretKey = '%lY3gBn%R7NlcR%Wyv26Fl%hC@$Bc$2o';
-const jwtExpiresInDays = '1d';
-const bcryptSaltRounds = 10;
-
-const createJwtToken = function (id) {
-	return jwt.sign({ id }, jwtSecretKey, {
-		expiresIn: jwtExpiresInDays,
-	});
-};
+import { config } from '../config.js';
 
 /**
  * [참고] HTTP 인증 프레임워크의 여러 인증 스킴
  * https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication
  */
 
-// TODO: 나중에 아래의 코드를 은닉해야한다. (to make secure)
+function createJwtToken(id) {
+	return jwt.sign({ id }, config.jwt.secretKey, {
+		expiresIn: config.jwt.expiresInSec,
+	});
+}
+
 export default class AuthController {
 	async signup(req, res, next) {
 		const { username, password, name, email, img_url } = req.body;
@@ -27,7 +23,7 @@ export default class AuthController {
 		}
 
 		// 사용자 패스워드 해싱
-		const hashed = await bcrypt.hash(password, bcryptSaltRounds);
+		const hashed = await bcrypt.hash(password, config.bcrypt.saltRounds);
 		const userId = await userRepository.createUser({
 			username,
 			password: hashed,

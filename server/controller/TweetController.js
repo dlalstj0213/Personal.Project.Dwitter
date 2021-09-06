@@ -27,16 +27,34 @@ export default class TweetController {
 	async updateTweet(req, res, next) {
 		const id = req.params.id;
 		const text = req.body.text;
-		const tweet = await tweetRepository.update(id, text);
-		if (tweet) {
-			res.status(200).json(tweet);
-		} else {
-			res.status(404).json({ message: `Tweet id(${id}) not found` });
+
+		/**
+		 * 401 = 로그인이 필요한 서비스인데 로그인이 되지 않았을 때
+		 * 403 = 로그인된 사용자이지만 특별한 권한이 없을 때
+		 */
+		const tweet = await tweetRepository.getById(id);
+		if (!tweet) {
+			return res.sendStatus(404);
 		}
+		if (tweet.userId !== req.userId) {
+			return res.sendStatus(403);
+		}
+
+		const updated = await tweetRepository.update(id, text);
+		res.status(200).json(updated);
 	}
 
 	async deleteTweet(req, res, next) {
 		const id = req.params.id;
+
+		const tweet = await tweetRepository.getById(id);
+		if (!tweet) {
+			return res.sendStatus(404);
+		}
+		if (tweet.userId !== req.userId) {
+			return res.sendStatus(403);
+		}
+
 		await tweetRepository.remove(id);
 		res.sendStatus(204);
 	}

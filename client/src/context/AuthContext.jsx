@@ -1,4 +1,4 @@
-import React, {
+import {
 	createContext,
 	createRef,
 	useEffect,
@@ -9,6 +9,7 @@ import React, {
 	useContext,
 } from 'react';
 import Header from '../components/Header';
+import Login from '../pages/Login';
 
 const AuthContext = createContext({});
 
@@ -66,7 +67,7 @@ export function AuthProvider({ authService, authErrorEventBus, children }) {
 			) : (
 				<div className="app">
 					<Header />
-					{/* <Login onSignUp={signUp} onLogin={logIn} /> */}
+					<Login onSignUp={signUp} onLogin={logIn} />
 				</div>
 			)}
 		</AuthContext.Provider>

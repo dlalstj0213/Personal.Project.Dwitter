@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import * as userRepository from '../data/auth.js';
 
 const jwtSecretKey = '%lY3gBn%R7NlcR%Wyv26Fl%hC@$Bc$2o';
-const jwtExpiresInDays = '2d';
+const jwtExpiresInDays = '1d';
 const bcryptSaltRounds = 10;
 
 const createJwtToken = function (id) {

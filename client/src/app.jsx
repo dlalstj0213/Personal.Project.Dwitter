@@ -10,6 +10,7 @@ function App({ tweetService }) {
 	const { user, logout } = useAuth();
 
 	const onAllTweets = () => {
+		console.log('hello');
 		history.push('/');
 	};
 
@@ -27,7 +28,7 @@ function App({ tweetService }) {
 	return (
 		<div className="app">
 			<Header
-				username="minseo"
+				username={user.username}
 				onLogout={onLogout}
 				onAllTweets={onAllTweets}
 				onMyTweets={onMyTweets}

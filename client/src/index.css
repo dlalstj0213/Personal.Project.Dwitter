@@ -108,6 +108,17 @@ button {
 	background-color: var(--color-green);
 }
 
+.auth-form {
+	display: flex;
+	flex-direction: column;
+	color: var(--color-black);
+	padding: 16px 32px;
+}
+
+.auth-form-btn {
+	margin: 16px;
+}
+
 .form-btn {
 	font-size: 1.2rem;
 	background: var(--color-blue);

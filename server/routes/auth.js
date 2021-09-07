@@ -37,8 +37,9 @@ const validateSignup = [
 ];
 
 router
-	.post('/login', validateCredential, authController.login)
-	.post('/signup', validateSignup, authController.signup)
-	.get('/me', isAuth, authController.me);
+	.post('/auth/login', validateCredential, authController.login)
+	.post('/auth/signup', validateSignup, authController.signup)
+	.get('/auth/me', isAuth, authController.me);
 
-export default router;
+// export default router;
+export { router };

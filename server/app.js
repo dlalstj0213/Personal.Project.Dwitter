@@ -4,9 +4,10 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import helmet from 'helmet';
+import glob from 'glob';
 
-import tweetsRouter from './routes/tweets.js';
-import authRouter from './routes/auth.js';
+// import tweetsRouter from './routes/tweets.js';
+// import authRouter from './routes/auth.js';
 import { config } from './config.js';
 
 const app = express();
@@ -22,18 +23,34 @@ const option = {
 };
 app.use(cors(option));
 
-app.use('/tweets', tweetsRouter);
-app.use('/auth', authRouter);
-
-// Bad Request 처리
-app.use((req, res, next) => {
-	res.sendStatus(404);
+let cntRouters = 0;
+glob.sync('./routes/**/*.js').forEach(async (file, idx, files) => {
+	const { router } = await import(file);
+	typeof router === 'function' ||
+		console.error(`Import Error:: Router is not a Function [${file}]`);
+	router != null || console.error('Import Error:: Router Not Found Error');
+	app.use(router); // router 동적 할당
+	cntRouters++;
+	if (cntRouters == files.length) {
+		// error 처리 테스트 URL
+		app.use('/error', (req, res, next) => {
+			console.log('error test request detected');
+			throw new Error();
+		});
+		// Bad Request 처리
+		app.use((req, res, next) => {
+			console.log('Bad Request');
+			res.sendStatus(404);
+		});
+		// error 처리
+		app.use((error, req, res, next) => {
+			console.error('ERROR:', error);
+			res.sendStatus(500);
+		});
+	}
 });
 
-// error 처리
-app.use((error, req, res, next) => {
-	console.error(error);
-	res.sendStatus(500);
-});
+// app.use('/tweets', tweetsRouter);
+// app.use('/auth', authRouter);
 
 app.listen(config.host.port);

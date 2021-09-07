@@ -21,15 +21,30 @@ const validateTweet = [
 ];
 
 router
-	.get('/', isAuth, tweetController.getTweets)
-	.get('/:id', isAuth, tweetController.getTweet)
-	.post('/', isAuth, validateTweet, tweetController.createTweet)
-	.put('/:id', isAuth, validateTweet, tweetController.updateTweet)
+	.route('/tweets')
+	.get(isAuth, tweetController.getTweets)
+	.post(isAuth, validateTweet, tweetController.createTweet);
+router
+	.route('/tweets/:id')
+	.get(isAuth, tweetController.getTweet)
+	.put(isAuth, validateTweet, tweetController.updateTweet)
 	.delete(
-		'/:id',
 		isAuth,
 		[param('id').notEmpty().withMessage('삭제할 아이디가 없습니다.'), validate],
 		tweetController.deleteTweet
 	);
 
-export default router;
+// router
+// .get('/tweets/', isAuth, tweetController.getTweets)
+// .get('/tweets/:id', isAuth, tweetController.getTweet)
+// .post('/tweets/', isAuth, validateTweet, tweetController.createTweet)
+// .put('/tweets/:id', isAuth, validateTweet, tweetController.updateTweet)
+// .delete(
+// 	'/tweets/:id',
+// 	isAuth,
+// 	[param('id').notEmpty().withMessage('삭제할 아이디가 없습니다.'), validate],
+// 	tweetController.deleteTweet
+// );
+
+// export default router;
+export { router };

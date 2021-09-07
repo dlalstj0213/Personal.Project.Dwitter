@@ -3,7 +3,7 @@ import { validationResult } from 'express-validator';
 // 유효성 검사 결과 로직
 export const validate = (req, res, next) => {
 	const errors = validationResult(req);
-	console.log(errors);
+	console.log('Verification', errors);
 	if (errors.isEmpty()) {
 		return next();
 	}

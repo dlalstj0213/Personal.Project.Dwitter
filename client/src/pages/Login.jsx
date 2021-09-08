@@ -97,7 +97,6 @@ const Login = ({ onSignUp, onLogin }) => {
 						value={img_url}
 						onChange={onChange}
 						className="form-input"
-						required
 					/>
 				)}
 				<div className="form-signup">

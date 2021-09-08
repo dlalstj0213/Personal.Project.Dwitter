@@ -1,11 +1,11 @@
 export default class TweetService {
-	constructor(http, tokenStorage) {
+	constructor(http, tokenStorage, socket) {
 		this.http = http;
 		this.tokenStorage = tokenStorage;
+		this.socket = socket;
 	}
 
 	async getTweets(username) {
-		console.log('RUNRUNRUN');
 		const query = username ? `?username=${username}` : '';
 		return this.http.fetch(`/tweets${query}`, {
 			method: 'GET',
@@ -41,5 +41,9 @@ export default class TweetService {
 		return {
 			Authorization: `Bearer ${token}`,
 		};
+	}
+
+	onSync(callback) {
+		return this.socket.onSync('tweets-creation', callback);
 	}
 }

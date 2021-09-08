@@ -6,9 +6,8 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import glob from 'glob';
 
-// import tweetsRouter from './routes/tweets.js';
-// import authRouter from './routes/auth.js';
 import { config } from './config.js';
+import { initSocket } from './connection/socket.js';
 
 const app = express();
 
@@ -50,7 +49,5 @@ glob.sync('./routes/**/*.js').forEach(async (file, idx, files) => {
 	}
 });
 
-// app.use('/tweets', tweetsRouter);
-// app.use('/auth', authRouter);
-
-app.listen(config.host.port);
+const server = app.listen(config.host.port);
+initSocket(server);

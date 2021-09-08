@@ -1,3 +1,4 @@
+import { getSocketIO } from '../connection/socket.js';
 import * as tweetRepository from '../data/tweet.js';
 
 export default class TweetController {
@@ -22,6 +23,7 @@ export default class TweetController {
 		const userId = req.userId;
 		const tweet = await tweetRepository.create(text, userId);
 		res.status(201).json(tweet);
+		getSocketIO().emit('tweets-creation', { command: 'created', tweet }); // 새로 만들어진 트윗을 Broadcast를 해준다.
 	}
 
 	async updateTweet(req, res, next) {

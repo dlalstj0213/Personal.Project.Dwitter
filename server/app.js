@@ -8,6 +8,7 @@ import glob from 'glob';
 
 import { config } from './config.js';
 import { initSocket } from './connection/socket.js';
+import { db } from './db/database.js';
 
 const app = express();
 
@@ -49,5 +50,7 @@ glob.sync('./routes/**/*.js').forEach(async (file, idx, files) => {
 	}
 });
 
+//db.getConnection().then((connection) => console.log(connection));
+db.getConnection().then((connection) => {});
 const server = app.listen(config.host.port);
 initSocket(server);

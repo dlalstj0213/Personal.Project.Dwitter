@@ -1,25 +1,23 @@
-import path from 'path';
-import fs from 'fs';
-
-// abcd1234 : $2b$10$p0QGo0SCPf04HkP17OxA.OsQH1COyfnhICqzqLTrcWJA1zwyDRhNG
-
-let users = JSON.parse(
-	fs.readFileSync(
-		path.join(process.cwd(), 'res', 'json', 'sample-data.json'),
-		'utf8'
-	)
-).users;
+import { db } from '../db/database.js';
 
 export async function findByUsername(username) {
-	return users.find((user) => user.username === username);
-}
-
-export async function createUser(user) {
-	const created = { ...user, id: Date.now().toString() };
-	users.push(created);
-	return created.id;
+	return db
+		.execute('SELECT * FROM users WHERE username = ?', [username])
+		.then((result) => result[0][0]);
 }
 
 export async function findById(id) {
-	return users.find((user) => user.id == id);
+	return db
+		.execute('SELECT * FROM users WHERE id = ?', [id])
+		.then((result) => result[0][0]);
+}
+
+export async function createUser(user) {
+	const { username, password, name, email, img_url } = user;
+	return db
+		.execute(
+			'INSERT INTO users (username, password, name, email, img_url) VALUES (?, ?, ?, ?, ?)',
+			[username, password, name, email, img_url]
+		)
+		.then((result) => result[0].insertId);
 }

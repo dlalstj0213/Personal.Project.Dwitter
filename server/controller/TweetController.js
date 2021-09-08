@@ -5,7 +5,7 @@ export default class TweetController {
 	async getTweets(req, res, next) {
 		const username = req.query.username;
 		const data = await (username
-			? tweetRepository.getAllByUserName(username)
+			? tweetRepository.getAllByUsername(username)
 			: tweetRepository.getAll());
 
 		res.status(200).json(data);

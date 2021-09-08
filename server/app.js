@@ -8,7 +8,7 @@ import glob from 'glob';
 
 import { config } from './config.js';
 import { initSocket } from './connection/socket.js';
-import { db } from './db/database.js';
+import { sequelize } from './db/database.js';
 
 const app = express();
 
@@ -47,10 +47,11 @@ glob.sync('./routes/**/*.js').forEach(async (file, idx, files) => {
 			console.error('ERROR:', error);
 			res.sendStatus(500);
 		});
+
+		// ORM 및 DB 연동 후 소켓, 서버 시작
+		sequelize.sync().then(() => {
+			const server = app.listen(config.host.port);
+			initSocket(server);
+		});
 	}
 });
-
-//db.getConnection().then((connection) => console.log(connection));
-db.getConnection().then((connection) => {});
-const server = app.listen(config.host.port);
-initSocket(server);

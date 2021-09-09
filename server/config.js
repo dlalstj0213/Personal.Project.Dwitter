@@ -10,8 +10,9 @@ function required(key, defaultValue = undefined) {
 }
 
 export const config = {
-	host: {
-		port: required('PORT', 8080),
+	port: parseInt(required('PORT', 8080)),
+	cors: {
+		allowOrigin: required('CORS_ALLOW_ORIGIN'),
 	},
 	jwt: {
 		secretKey: required('JWT_SECRET'),

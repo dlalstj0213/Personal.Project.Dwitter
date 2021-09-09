@@ -1,25 +1,28 @@
-import path from 'path';
-import fs from 'fs';
+import MongoDb from 'mongodb';
+import { getUsers } from '../db/database.js';
 
-// abcd1234 : $2b$10$p0QGo0SCPf04HkP17OxA.OsQH1COyfnhICqzqLTrcWJA1zwyDRhNG
-
-let users = JSON.parse(
-	fs.readFileSync(
-		path.join(process.cwd(), 'res', 'json', 'sample-data.json'),
-		'utf8'
-	)
-).users;
-
+const ObjectId = MongoDb.ObjectId;
 export async function findByUsername(username) {
-	return users.find((user) => user.username === username);
-}
-
-export async function createUser(user) {
-	const created = { ...user, id: Date.now().toString() };
-	users.push(created);
-	return created.id;
+	return getUsers().find({ username }).next().then(mapOptionalUser);
 }
 
 export async function findById(id) {
-	return users.find((user) => user.id == id);
+	return getUsers()
+		.find({ _id: new ObjectId(id) })
+		.next()
+		.then(mapOptionalUser);
+}
+
+export async function createUser(user) {
+	return getUsers()
+		.insertOne(user)
+		.then((result) => {
+			//console.log('Created', result.insertedId.toString());
+			return result.insertedId.toString(); // Id 반환
+		});
+}
+
+// 객체 변환
+function mapOptionalUser(user) {
+	return user ? { ...user, id: user._id.toString() } : user;
 }

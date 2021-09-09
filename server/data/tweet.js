@@ -1,76 +1,72 @@
 import path from 'path';
 import fs from 'fs';
 import * as userRepository from '../data/auth.js';
+import { getTweets } from '../db/database.js';
+import MongoDb from 'mongodb';
+const ObjectId = MongoDb.ObjectId;
 
-/*
-const tweets = [
-  {
-    id: string,  // 트윗 아이디
-    text: string,  // 트윗 텍스트
-    createdAt: Date,  // 트윗 생성 날짜
-    name: string,  // 사용자 이름
-    username: string,  // 사용자 닉네임 (아이디)
-    img_url: string  // 사용자 프로필 파일 사진 URL
-  }
-];
-*/
-let tweets = JSON.parse(
-	fs.readFileSync(
-		path.join(process.cwd(), 'res', 'json', 'sample-data.json'),
-		'utf8'
-	)
-).tweets;
-
-for (let item of tweets) {
-	item.createdAt = new Date().toString();
-}
+/**
+ *  NoSQL 정보의 중복성 > 관계 : 쿼리의 성능을 위해서
+ */
 
 export async function getAll() {
-	// return tweets;
-	return Promise.all(
-		tweets.map(async (tweet) => {
-			const { username, name, img_url } = await userRepository.findById(
-				tweet.userId
-			);
-			return { ...tweet, username, name, img_url };
-		})
-	);
+	return getTweets().find().sort({ createdAt: -1 }).toArray().then(mapTweets);
 }
 
-export async function getAllByUserName(username) {
-	return getAll().then((tweets) =>
-		tweets.filter((item) => item.username === username)
-	);
+export async function getAllByUsername(username) {
+	return getTweets()
+		.find({ username })
+		.sort({ createdAt: -1 })
+		.toArray()
+		.then(mapTweets);
 }
 
 export async function getById(id) {
-	const found = tweets.find((item) => item.id === id);
-	if (!found) {
-		return null;
-	}
-	const { username, name, img_url } = await userRepository.findById(
-		found.userId
-	);
-	return { ...found, username, name, img_url };
+	return getTweets()
+		.find({ _id: new ObjectId(id) })
+		.next()
+		.then(mapOptionalTweet);
 }
 
 export async function create(text, userId) {
-	const tweet = {
-		id: Date.now().toString(),
-		text,
-		createdAt: new Date().toString(),
-		userId,
-	};
-	tweets = [tweet, ...tweets];
-	return getById(tweet.id);
+	return userRepository
+		.findById(userId)
+		.then((user) =>
+			getTweets().insertOne({
+				text,
+				createdAt: new Date(),
+				userId,
+				name: user.name,
+				username: user.username,
+				img_url: user.img_url,
+			})
+		)
+		.then((result) => getById(result.insertedId.toString()));
 }
 
 export async function update(id, text) {
-	const tweet = tweets.find((item) => item.id === id);
-	if (tweet) tweet.text = text;
-	return getById(tweet.id);
+	return getTweets()
+		.findOneAndUpdate(
+			{ _id: new ObjectId(id) },
+			{ $set: { text } },
+			{ returnDocument: 'after' }
+		)
+		.then((result) => {
+			console.log(result);
+			return result.value;
+		})
+		.then(mapOptionalTweet);
 }
 
 export async function remove(id) {
-	tweets = tweets.filter((item) => item.id !== id);
+	return getTweets().deleteOne({ _id: new ObjectId(id) });
+}
+
+function mapTweets(tweets) {
+	return tweets.map((tweet) => ({ ...tweet, id: tweet._id.toString() }));
+}
+
+// 객체 변환
+function mapOptionalTweet(tweet) {
+	return tweet ? { ...tweet, id: tweet._id.toString() } : tweet;
 }

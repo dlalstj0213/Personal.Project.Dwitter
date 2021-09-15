@@ -14,6 +14,16 @@ function createJwtToken(id) {
 	});
 }
 
+function setToken(res, token) {
+	const options = {
+		maxAge: config.jwt.expiresInSec * 1000,
+		httpOnly: true,
+		sameSite: 'none',
+		secure: true,
+	};
+	res.cookie('token', token, options); // HTTP-ONLY
+}
+
 export default class AuthController {
 	async signup(req, res, next) {
 		const { username, password, name, email, img_url } = req.body;
@@ -31,7 +41,8 @@ export default class AuthController {
 			email,
 			img_url,
 		});
-		const token = createJwtToken(userId);
+		const token = createJwtToken(userId); // cookie header
+		setToken(res, token);
 		res.status(201).json({ token, username });
 	}
 
@@ -46,6 +57,7 @@ export default class AuthController {
 			return res.status(401).json({ message: 'Invalid user or password' });
 		}
 		const token = createJwtToken(user.id);
+		setToken(res, token);
 		res.status(200).json({ token, username });
 	}
 

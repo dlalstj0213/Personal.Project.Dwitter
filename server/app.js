@@ -18,8 +18,9 @@ app.use(morgan('combined'));
 app.use(helmet());
 const option = {
 	//origin: ['http://127.0.0.1:5500'],
+	origin: config.cors.allowOrigin,
 	optionsSuccessStatus: 200,
-	credentials: true,
+	credentials: true, // allow the Access-Control-Allow-Credentials
 };
 app.use(cors(option));
 
@@ -50,7 +51,8 @@ glob.sync('./routes/**/*.js').forEach(async (file, idx, files) => {
 
 		connectDB()
 			.then((client) => {
-				const server = app.listen(config.host.port);
+				console.log(`Server is started...${new Date()}`);
+				const server = app.listen(config.port);
 				initSocket(server);
 			})
 			.catch(console.error);

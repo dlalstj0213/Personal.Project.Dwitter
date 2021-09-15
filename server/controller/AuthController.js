@@ -61,6 +61,11 @@ export default class AuthController {
 		res.status(200).json({ token, username });
 	}
 
+	async logout(req, res, next) {
+		res.cookie('token', '');
+		res.status(200).json({ message: 'User has been logged out' });
+	}
+
 	async me(req, res, next) {
 		const user = await userRepository.findById(req.userId);
 		if (!user) {

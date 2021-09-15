@@ -40,7 +40,8 @@ router
 	.post('/auth/login', validateCredential, authController.login)
 	.post('/auth/signup', validateSignup, authController.signup)
 	.post('/auth/logout', authController.logout)
-	.get('/auth/me', isAuth, authController.me);
+	.get('/auth/me', isAuth, authController.me)
+	.get('/auth/csrf-token', authController.csrfToken);
 
 // export default router;
 export { router };

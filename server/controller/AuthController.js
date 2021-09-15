@@ -24,6 +24,10 @@ function setToken(res, token) {
 	res.cookie('token', token, options); // HTTP-ONLY
 }
 
+async function generateCSRFToken() {
+	return bcrypt.hash(config.csrf.plainToken, 1);
+}
+
 export default class AuthController {
 	async signup(req, res, next) {
 		const { username, password, name, email, img_url } = req.body;
@@ -72,5 +76,10 @@ export default class AuthController {
 			return res.status(404).json({ message: 'User not found' });
 		}
 		res.status(200).json({ totken: req.token, username: user.username });
+	}
+
+	async csrfToken(req, res, next) {
+		const csrfToken = await generateCSRFToken();
+		res.status(200).json({ csrfToken });
 	}
 }

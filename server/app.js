@@ -9,6 +9,7 @@ import glob from 'glob';
 import { config } from './config.js';
 import { initSocket } from './connection/socket.js';
 import { connectDB } from './db/database.js';
+import { csrfCheck } from './middleware/csrf.js';
 
 const app = express();
 
@@ -23,6 +24,7 @@ const option = {
 	credentials: true, // allow the Access-Control-Allow-Credentials
 };
 app.use(cors(option));
+app.use(csrfCheck);
 
 let cntRouters = 0;
 glob.sync('./routes/**/*.js').forEach(async (file, idx, files) => {

@@ -10,12 +10,13 @@ import { config } from './config.js';
 import { initSocket } from './connection/socket.js';
 import { connectDB } from './db/database.js';
 import { csrfCheck } from './middleware/csrf.js';
+import rateLimiter from './middleware/rate-limiter.js';
 
 const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(morgan('combined'));
+app.use(morgan('tiny')); //combined
 app.use(helmet());
 const option = {
 	//origin: ['http://127.0.0.1:5500'],
@@ -24,6 +25,7 @@ const option = {
 	credentials: true, // allow the Access-Control-Allow-Credentials
 };
 app.use(cors(option));
+app.use(rateLimiter);
 app.use(csrfCheck);
 
 let cntRouters = 0;

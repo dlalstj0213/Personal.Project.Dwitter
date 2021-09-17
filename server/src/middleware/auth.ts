@@ -1,16 +1,21 @@
-import jwt from 'jsonwebtoken';
+import { Request, Response, NextFunction } from 'express';
+import jwt, { JwtPayload, VerifyErrors } from 'jsonwebtoken';
 import * as userRepository from '../data/auth.js';
 import { config } from '../config.js';
 
 const AUTH_ERROR = { message: 'Authentication Error' };
 
-export const isAuth = async (req, res, next) => {
+export const isAuth = async (
+	req: any,
+	res: Response,
+	next: NextFunction
+): Promise<void | Response> => {
 	/**
 	 * 1. Cookie (for Browser)
 	 * 2. Header (for Non-Browser Client)
 	 */
 
-	let token;
+	let token: string | null | undefined;
 	// 1. Header 안에 Authorization 키의 값을 가져온다.
 	const authHeader = req.get('Authorization');
 	// 2. Header 안에 해당 키가 있고 Bearer로 시작할 경우 토큰 읽기
@@ -29,18 +34,21 @@ export const isAuth = async (req, res, next) => {
 		return res.status(401).json(AUTH_ERROR);
 	}
 
-	// TODO: Make it secure!
 	// 6. 토큰을 검증한다.
-	jwt.verify(token, config.jwt.secretKey, async (error, decode) => {
-		if (error) {
-			return res.status(401).json(AUTH_ERROR);
+	jwt.verify(
+		token,
+		config.jwt.secretKey,
+		async (error: VerifyErrors | null, decode: JwtPayload | undefined) => {
+			if (error) {
+				return res.status(401).json(AUTH_ERROR);
+			}
+			const user = await userRepository.findById(decode?.id);
+			if (!user) {
+				return res.status(401).json(AUTH_ERROR);
+			}
+			req.userId = user.id;
+			req.token = token;
+			next();
 		}
-		const user = await userRepository.findById(decode.id);
-		if (!user) {
-			return res.status(401).json(AUTH_ERROR);
-		}
-		req.userId = user.id;
-		req.token = token;
-		next();
-	});
+	);
 };

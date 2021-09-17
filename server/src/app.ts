@@ -1,10 +1,11 @@
-import express from 'express';
+import { Mongoose } from 'mongoose';
+import express, { NextFunction, Request, Response } from 'express';
 import 'express-async-errors';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import helmet from 'helmet';
-import glob from 'glob';
+// import glob from 'glob';
 
 import * as tweetsRouter from './routes/tweets.js';
 import * as authRouter from './routes/auth.js';
@@ -44,7 +45,7 @@ app.use((req, res, next) => {
 	res.sendStatus(404);
 });
 // error 처리
-app.use((error, req, res, next) => {
+app.use((error: any, req: Request, res: Response, next: NextFunction) => {
 	console.error('ERROR:', error);
 	res.sendStatus(500);
 });

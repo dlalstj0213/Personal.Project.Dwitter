@@ -1,7 +1,8 @@
 import bcrypt from 'bcrypt';
+import { Request, NextFunction, Response } from 'express';
 import { config } from '../config.js';
 
-export const csrfCheck = (req, res, next) => {
+export const csrfCheck = (req: Request, res: Response, next: NextFunction) => {
 	if (
 		req.method === 'GET' ||
 		req.method === 'OPTIONS' ||
@@ -20,7 +21,7 @@ export const csrfCheck = (req, res, next) => {
 		return res.status(403).json({ message: 'Failed CSRF check' });
 	}
 	validateCsrfToken(csrfHeader)
-		.then((valid) => {
+		.then((valid): Response | undefined => {
 			if (!valid) {
 				console.warn(
 					'Value provided in "dwitter-csrf-token" header does not validate',
@@ -31,12 +32,12 @@ export const csrfCheck = (req, res, next) => {
 			}
 			next();
 		})
-		.catch((err) => {
+		.catch((err): Response => {
 			console.log(err);
 			return res.status(500).json({ message: 'Something went wrong' });
 		});
 };
 
-async function validateCsrfToken(csrfToken) {
+async function validateCsrfToken(csrfToken: string): Promise<boolean> {
 	return bcrypt.compare(config.csrf.plainToken, csrfToken);
 }

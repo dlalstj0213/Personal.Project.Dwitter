@@ -1,3 +1,4 @@
+import { Request, Response, NextFunction, CookieOptions } from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import * as userRepository from '../data/auth.js';
@@ -8,20 +9,36 @@ import { config } from '../config.js';
  * https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication
  */
 
-function createJwtToken(id) {
+function createJwtToken(id: string | undefined) {
 	return jwt.sign({ id }, config.jwt.secretKey, {
 		expiresIn: config.jwt.expiresInSec,
 	});
 }
 
-function setToken(res, token) {
-	const options = {
-		maxAge: config.jwt.expiresInSec * 1000,
-		httpOnly: true,
-		sameSite: 'none',
-		secure: true,
-	};
-	res.cookie('token', token, options); // HTTP-ONLY
+class Cookie implements CookieOptions {
+	maxAge?: number;
+	signed?: boolean;
+	expires?: Date;
+	httpOnly?: boolean;
+	path?: string;
+	domain?: string;
+	sameSite?: boolean | 'lax' | 'strict' | 'none';
+	secure?: boolean;
+}
+
+function setToken(res: Response, token: string) {
+	// const options = {
+	// 	maxAge: config.jwt.expiresInSec * 1000,
+	// 	httpOnly: true,
+	// 	sameSite: 'none',
+	// 	secure: true,
+	// };
+	const cookie = new Cookie();
+	cookie.maxAge = config.jwt.expiresInSec * 1000;
+	cookie.httpOnly = true;
+	cookie.sameSite = 'none';
+	cookie.secure = true;
+	res.cookie('token', token, cookie); // HTTP-ONLY
 }
 
 async function generateCSRFToken() {
@@ -29,7 +46,11 @@ async function generateCSRFToken() {
 }
 
 export default class AuthController {
-	async signup(req, res, next) {
+	async signup(
+		req: Request,
+		res: Response,
+		next: NextFunction
+	): Promise<void | Response> {
 		const { username, password, name, email, img_url } = req.body;
 		const found = await userRepository.findByUsername(username);
 		if (found) {
@@ -50,7 +71,7 @@ export default class AuthController {
 		res.status(201).json({ token, username });
 	}
 
-	async login(req, res, next) {
+	async login(req: Request, res: Response, next: NextFunction) {
 		const { username, password } = req.body;
 		const user = await userRepository.findByUsername(username);
 		if (!user) {
@@ -65,12 +86,12 @@ export default class AuthController {
 		res.status(200).json({ token, username });
 	}
 
-	async logout(req, res, next) {
+	async logout(req: Request, res: Response, next: NextFunction) {
 		res.cookie('token', '');
 		res.status(200).json({ message: 'User has been logged out' });
 	}
 
-	async me(req, res, next) {
+	async me(req: any, res: Response, next: NextFunction) {
 		const user = await userRepository.findById(req.userId);
 		if (!user) {
 			return res.status(404).json({ message: 'User not found' });
@@ -78,7 +99,7 @@ export default class AuthController {
 		res.status(200).json({ totken: req.token, username: user.username });
 	}
 
-	async csrfToken(req, res, next) {
+	async csrfToken(req: Request, res: Response, next: NextFunction) {
 		const csrfToken = await generateCSRFToken();
 		res.status(200).json({ csrfToken });
 	}

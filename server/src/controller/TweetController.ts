@@ -1,9 +1,10 @@
+import { Request, Response, NextFunction } from 'express';
 import { getSocketIO } from '../connection/socket.js';
 import * as tweetRepository from '../data/tweet.js';
 
 export default class TweetController {
-	async getTweets(req, res, next) {
-		const username = req.query.username;
+	async getTweets(req: Request, res: Response, next: NextFunction) {
+		const username: any = req.query.username;
 		const data = await (username
 			? tweetRepository.getAllByUsername(username)
 			: tweetRepository.getAll());
@@ -11,14 +12,14 @@ export default class TweetController {
 		res.status(200).json(data);
 	}
 
-	async getTweet(req, res, next) {
+	async getTweet(req: Request, res: Response, next: NextFunction) {
 		const id = req.params.id;
 		const tweet = await tweetRepository.getById(id);
 		if (tweet) return res.status(200).json(tweet);
 		else return res.status(404).json({ message: `Tweet id(${id}) not found` });
 	}
 
-	async createTweet(req, res, next) {
+	async createTweet(req: any, res: Response, next: NextFunction) {
 		const { text } = req.body;
 		const userId = req.userId;
 		const tweet = await tweetRepository.create(text, userId);
@@ -26,7 +27,7 @@ export default class TweetController {
 		getSocketIO().emit('tweets-creation', { command: 'created', tweet }); // 새로 만들어진 트윗을 Broadcast를 해준다.
 	}
 
-	async updateTweet(req, res, next) {
+	async updateTweet(req: any, res: Response, next: NextFunction) {
 		const id = req.params.id;
 		const text = req.body.text;
 
@@ -46,7 +47,7 @@ export default class TweetController {
 		res.status(200).json(updated);
 	}
 
-	async deleteTweet(req, res, next) {
+	async deleteTweet(req: any, res: Response, next: NextFunction) {
 		const id = req.params.id;
 
 		const tweet = await tweetRepository.getById(id);

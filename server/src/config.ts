@@ -1,15 +1,39 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-function required(key, defaultValue = undefined) {
-	const value = process.env[key] || defaultValue;
+function required(key: string, defaultValue: any = undefined): string {
+	const value: string | any = process.env[key] || defaultValue;
 	if (value == null) {
 		throw new Error(`Key ${key} is undefined`);
 	}
 	return value;
 }
 
-export const config = {
+type Config = {
+	port: number;
+	cors: {
+		allowOrigin: string;
+	};
+	jwt: {
+		secretKey: string;
+		expiresInSec: number;
+	};
+	bcrypt: {
+		saltRounds: number;
+	};
+	db: {
+		host: string;
+	};
+	csrf: {
+		plainToken: string;
+	};
+	rateLimit: {
+		windowMs: number;
+		maxRequest: number;
+	};
+};
+
+export const config: Config = {
 	port: parseInt(required('PORT', 8080)),
 	cors: {
 		allowOrigin: required('CORS_ALLOW_ORIGIN'),
